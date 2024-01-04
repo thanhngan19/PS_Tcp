@@ -37,6 +37,7 @@ public final class SanPham extends JPanel implements ActionListener {
     IntegratedSearch search;
     DefaultTableModel tblModel;
     Main m;
+    private ISocketClient conn= new Log_In();
 private IPhoneHandle phone = new PhoneHandle();
     public List<Phone> list = phone.findAll();
     Color BackgroundColor = new Color(240, 247, 250);
@@ -140,8 +141,9 @@ private IPhoneHandle phone = new PhoneHandle();
             if (index != -1) {
                 int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa Sản phẩm :)!", "Xóa sản phẩm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
+                    Log_In.check=true;
                     phone.deletePhone(new ListTransfer(list.get(index),"delete"));
-                    list.remove(index);
+                    list= conn.findAll().getListPhone();
                     loadDataTalbe(list);
                 }
             }

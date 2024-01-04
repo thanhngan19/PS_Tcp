@@ -8,7 +8,9 @@ import GUI.Component.ButtonCustom;
 import GUI.Component.HeaderTitle;
 import GUI.Component.InputForm;
 import GUI.Component.NumericDocumentFilter;
+import GUI.Log_In;
 import GUI.Panel.QuanLyThuocTinhSP;
+import connect.ISocketClient;
 import handler.GrAuthorHandle;
 import handler.IGrAuthorHandle;
 import handler.IRamHandle;
@@ -50,7 +52,7 @@ public final class DungLuongRamDialog extends JDialog implements MouseListener {
     List<Ram> list = ram.findAll();
     QuanLyThuocTinhSP qltt;
     private IGrAuthorHandle gr= new GrAuthorHandle();
-
+    private ISocketClient conn = new Log_In();
     public DungLuongRamDialog(JFrame owner, QuanLyThuocTinhSP qltt, String title, boolean modal, int nhomquyen) {
         super(owner, title, modal);
         initComponent(qltt);
@@ -148,6 +150,7 @@ public final class DungLuongRamDialog extends JDialog implements MouseListener {
                 String kichthuoc = String.valueOf(kt);
                 if (ram.checkUp(kt)) {
                     ram.addPhone(new ListTransfer(new Ram(1,kichthuoc ,1),"add"));
+                    list= conn.findAll().getListRam();
                     loadDataTable(list);
                     ms.setText("");
                 } else {
@@ -158,6 +161,7 @@ public final class DungLuongRamDialog extends JDialog implements MouseListener {
             int index = getRowSelected();
             if (index != -1) {
                 ram.deletePhone(new ListTransfer(list.get(index),"delete"));
+                list= conn.findAll().getListRam();
                 loadDataTable(list);
                 ms.setText("");
             }
@@ -171,6 +175,7 @@ public final class DungLuongRamDialog extends JDialog implements MouseListener {
                     String kichthuoc = String.valueOf(kt);
                     if (ram.checkUp(kt)) {
                         ram.editPhone(new ListTransfer(new Ram(list.get(index).getId(), kichthuoc,1),"edit"));
+                        list= conn.findAll().getListRam();
                         loadDataTable(list);
                         ms.setText("");
                     } else {

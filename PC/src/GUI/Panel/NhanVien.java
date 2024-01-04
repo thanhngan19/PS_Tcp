@@ -1,26 +1,33 @@
 package GUI.Panel;
 
+
 import GUI.Component.IntegratedSearch;
 import GUI.Component.MainFunction;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import GUI.Component.PanelBorderRadius;
+import GUI.Dialog.KhuVucKhoDialog;
+import GUI.Dialog.NhanVienTrans;
+import GUI.Log_In;
 import GUI.Main;
-import handler.CustomerHandle;
-import handler.ICustomerHandle;
+import connect.ISocketClient;
 import model.Customer;
+import model.ListTransfer;
+import model.Phone;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public final class NhanVien extends JPanel {
+public final class NhanVien extends JPanel implements ActionListener {
 
     public JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
-    private ICustomerHandle nvBus= new CustomerHandle();
+    NhanVienTrans nvBus= new NhanVienTrans(this);
     PanelBorderRadius main, functionBar;
     JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
     JTable tableNhanVien;
@@ -28,7 +35,8 @@ public final class NhanVien extends JPanel {
     MainFunction mainFunction;
     public IntegratedSearch search;
     Main m;
-    List<Customer> listnv = nvBus.findAll();
+    private ISocketClient conn= new Log_In();
+    List<Customer> listnv = conn.findAll().getCustomerList();
     Color BackgroundColor = new Color(240, 247, 250);
     private DefaultTableModel tblModel;
 
@@ -74,11 +82,13 @@ public final class NhanVien extends JPanel {
         String[] action = {"create", "update", "delete", "detail"};
         mainFunction = new MainFunction(m.user.getManhomquyen().getId(), "nhanvien", action);
         for (String ac : action) {
-            mainFunction.btn.get(ac).addActionListener((ActionListener) this.nvBus);
+            mainFunction.btn.get(ac).addActionListener(nvBus);
         }
+        functionBar.add(mainFunction);
         functionBar.add(mainFunction);
         search = new IntegratedSearch(new String[]{"Tất cả", "Họ tên", "Email"});
         functionBar.add(search);
+        search.btnReset.addActionListener(this);
 
 
         // main là phần ở dưới để thống kê bảng biểu
@@ -109,6 +119,9 @@ public final class NhanVien extends JPanel {
         scrollTableSanPham.setViewportView(tableNhanVien);
         main.add(scrollTableSanPham);
     }
+
+
+
     public NhanVien(Main m) {
         this.m = m;
         initComponent();
@@ -127,10 +140,16 @@ public final class NhanVien extends JPanel {
     public void loadDataTalbe(List<Customer> list) {
         listnv = list;
         tblModel.setRowCount(0);
+        int n=1;
         for (Customer nhanVien : listnv) {
-            tblModel.addRow(new Object[]{
-                    nhanVien.getId(), nhanVien.getName(), nhanVien.getGender() == 1 ? "Nam" : "Nữ", nhanVien.getDate(), nhanVien.getSdt(), nhanVien.getEmail()
+            tblModel.addRow(new Object[]{n++
+                    , nhanVien.getName(), nhanVien.getGender() == 1 ? "Nam" : "Nữ", nhanVien.getDate(), nhanVien.getSdt(), nhanVien.getEmail()
             });
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }

@@ -245,7 +245,6 @@ public class PhoneRepository implements IPhoneRepository{
                 phone.setBrand(brand.findById(rs.getInt("thuonghieu")));
                 phone.setWareHouse(ware.findById(rs.getInt("khuvuckho")));
                 phone.setQuantity(rs.getInt("soluongton"));
-
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

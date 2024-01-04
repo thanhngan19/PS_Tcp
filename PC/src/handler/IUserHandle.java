@@ -9,6 +9,7 @@ public interface IUserHandle {
     void editUser(ListTransfer editUser);
     void addNew(ListTransfer addList);
     void deleteUser(ListTransfer deteleList);
+    User findById(int id);
 
 
 }

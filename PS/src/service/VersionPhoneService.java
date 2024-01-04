@@ -24,10 +24,7 @@ public class VersionPhoneService implements IVersionPhoneService {
         repo.editVer(ver);
     }
 
-    @Override
-    public void addVer(VersionPhone ver) {
-   repo.addVer(ver);
-    }
+
 
     @Override
     public void delete(int ver) {

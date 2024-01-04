@@ -15,6 +15,7 @@ public class BrandRepository implements IBrandRepository {
     private static final String SELECT_ALL="select * from thuonghieu";
     private static final String UPDATE="update thuonghieu set tenthuonghieu=?,trangthai=? where mathuonghieu=?";
     private static final String INSERT="insert into thuonghieu set tenthuonghieu=?,trangthai=?";
+    private static final String DELETE="delete from thuonghieu where thuonghieu.mathuonghieu=?";
     @Override
     public Brand findById(int id) {
         Brand brand=null;
@@ -52,6 +53,7 @@ public class BrandRepository implements IBrandRepository {
                 brand.setStatus(rs.getInt("trangthai"));
                 brandList.add(brand);
             }
+            conn.close();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -61,22 +63,38 @@ public class BrandRepository implements IBrandRepository {
 
     @Override
     public void editBrand(Brand br) {
+        Connection conn = null;
         try {
-            Connection conn= BaseRepository.getConnection();
+            conn = BaseRepository.getConnection();
             boolean currentAutoCommit = conn.getAutoCommit();
-            System.out.println("Current AutoCommit Status: " + currentAutoCommit);
-            PreparedStatement ps= conn.prepareStatement(UPDATE);
-            ps.setString(1,br.getName());
-            ps.setInt(2,br.getStatus());
+            System.out.println("Trạng thái AutoCommit hiện tại: " + currentAutoCommit);
+            conn.setAutoCommit(false);
+            System.out.println("Bắt đầu giao dịch.");
+            PreparedStatement ps = conn.prepareStatement(UPDATE);
+            ps.setString(1, br.getName());
+            ps.setInt(2, 1);
             ps.setInt(3,br.getId());
             ps.executeUpdate();
-            if (!currentAutoCommit) {
-                conn.setAutoCommit(true);
-                System.out.println("Autocommit has been set to true.");
-            }
-            conn.close();
+            conn.commit();
+            System.out.println("Giao dịch đã hoàn thành.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            try {
+                conn.rollback();
+                e.printStackTrace();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.out.println("Giao dịch đã bị hủy bỏ.");
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.setAutoCommit(true);;
+                conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("AutoCommit đã được đặt về true.");
+
         }
     }
 
@@ -118,6 +136,34 @@ public class BrandRepository implements IBrandRepository {
 
         @Override
     public void deleteBrand(int id) {
+            Connection conn = null;
+            try {
+                conn = BaseRepository.getConnection();
+                boolean currentAutoCommit = conn.getAutoCommit();
+                System.out.println("Trạng thái AutoCommit hiện tại: " + currentAutoCommit);
+                conn.setAutoCommit(false);
+                System.out.println("Bắt đầu giao dịch.");
+                PreparedStatement ps = conn.prepareStatement(DELETE);
+                ps.setInt(1, id);
+                ps.executeUpdate();
+                System.out.println("Giao dịch đã hoàn thành.");
+            } catch (SQLException e) {
+                try {
+                    conn.rollback();
+                    e.printStackTrace();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                System.out.println("Giao dịch đã bị hủy bỏ.");
+            } finally {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("AutoCommit đã được đặt về true.");
 
+            }
     }
 }

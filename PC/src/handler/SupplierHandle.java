@@ -2,6 +2,7 @@ package handler;
 
 import GUI.Log_In;
 import connect.ISocketClient;
+import model.ListTransfer;
 import model.Supplier;
 
 import java.util.List;
@@ -32,5 +33,20 @@ public class SupplierHandle implements ISupplierHandle{
             }
         }
         return supFind;
+    }
+
+    @Override
+    public void editPhone(ListTransfer editPhone) {
+        soc.listEdit(editPhone);
+    }
+
+    @Override
+    public void addPhone(ListTransfer addList) {
+soc.listAdd(addList);
+    }
+
+    @Override
+    public void deletePhone(ListTransfer deteleList) {
+soc.listDelete(deteleList);
     }
 }

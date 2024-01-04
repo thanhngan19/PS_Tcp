@@ -9,4 +9,5 @@ public interface IUserRepository {
     void editUser(User user);
     List<User> selectUser();
     int getUser(String name);
+    void setStatusAccount(int id);
 }

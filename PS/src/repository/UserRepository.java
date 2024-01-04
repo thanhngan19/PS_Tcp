@@ -14,6 +14,7 @@ public class UserRepository implements IUserRepository{
     private static final String UPDATE="update taikhoan set ('matkhau','manhomquyen','tendangnhap','trangthai') values(?,?,?,?) where taikhoan.manv=?";
     private static final String SELECT_STATUS="select * from taikhoan where trangthai =0";
     private static final String SELECT_USERNAME="select taikhoan.manv from taikhoan where taikhoan.tendangnhap=?";
+    private static final String SET_STATUS="update taikhoan set ('trangthai') values(?) where taikhoan.manv=? ";
     private IGrAuthorRepository gr= new GrAuthorRepository();
 
     @Override
@@ -99,5 +100,25 @@ public class UserRepository implements IUserRepository{
             throw new RuntimeException(e);
         }
         return manv;
+    }
+
+    @Override
+    public void setStatusAccount(int id) {
+        try {
+            Connection conn = BaseRepository.getConnection();
+            boolean currentAutoCommit = conn.getAutoCommit();
+            System.out.println("Current AutoCommit Status: " + currentAutoCommit);
+            PreparedStatement ps = conn.prepareStatement(SET_STATUS);
+            ps.setInt(1, 1);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            if (!currentAutoCommit) {
+                conn.setAutoCommit(true);
+                System.out.println("Autocommit has been set to true.");
+            }
+            conn.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

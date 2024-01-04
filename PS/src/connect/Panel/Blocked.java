@@ -10,6 +10,7 @@ import connect.Component.MainFunction;
 import connect.Component.PanelBorderRadius;
 import connect.Component.TableSorter;
 import connect.Main;
+import model.ListTransfer;
 import model.User;
 import service.IUserService;
 import service.UserService;
@@ -68,7 +69,7 @@ public final class Blocked extends JPanel implements ActionListener {
         functionBar.setPreferredSize(new Dimension(0, 100));
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
-        String[] action = {"create", "update", "delete", "detail"};
+        String[] action = { "update", "delete"};
         mainFunction = new MainFunction(m.user.getManhomquyen().getId(), "sanpham", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
@@ -107,8 +108,35 @@ public final class Blocked extends JPanel implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getSource() == mainFunction.btn.get("delete")) {
+            int index = getRowSelected();
+            if (index != -1) {
+                int input = JOptionPane.showConfirmDialog(null, "Bạn có muốn bỏ khóa tài khoản này :)!", "UNBLOCKED", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (input == 0) {
+                    user.setStatusAccount(list.get(index).getId());
+                    list.get(index).setStatus(1);
+                    loadDataTalbe();
+                }
+            }
+        }else if (e.getSource() == mainFunction.btn.get("update")) {
+            int index = getRowSelected();
+            if (index != -1) {
+                int input = JOptionPane.showConfirmDialog(null, "Bạn có muốn  khóa tài khoản này :)!", "BLOCKED", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (input == 0) {
+                    user.setStatusAccount(list.get(index).getId());
+                    list.get(index).setStatus(1);
+                    loadDataTalbe();
+                }
+            }
+        }
     }
+        public int getRowSelected() {
+            int index = tableSanPham.getSelectedRow();
+            if (index == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm");
+            }
+            return index;
+        }
 
 
 

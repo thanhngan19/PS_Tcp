@@ -15,23 +15,29 @@ public class RomHandle implements IRomHandle{
 
     @Override
     public void editPhone(ListTransfer editPhone) {
-
+soc.listEdit(editPhone);
 
     }
 
     @Override
     public void addPhone(ListTransfer addList) {
-
+soc.listAdd(addList);
     }
 
     @Override
     public void deletePhone(ListTransfer deteleList) {
-
+soc.listEdit(deteleList);
     }
 
     @Override
-    public boolean checkUp(int name) {
-        return false;
+    public boolean checkUp(int name){
+        boolean check= true;
+        for(Rom item: soc.findAll().getListRom()){
+            if(item.getName().equals(name)){
+                check= false;
+            }
+        }
+        return check;
     }
 
     @Override

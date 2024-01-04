@@ -53,4 +53,15 @@ public class PhoneHandle implements IPhoneHandle{
         return phoneObj;
     }
 
+    @Override
+    public List<Phone> selectPhoneByWare(int id) {
+        List<Phone> phoneList = new ArrayList<>();
+        for(Phone phone : findAll()){
+            if(phone.getWareHouse().getId()== id){
+                phoneList.add(phone);
+            }
+        }
+        return phoneList;
+    }
+
 }

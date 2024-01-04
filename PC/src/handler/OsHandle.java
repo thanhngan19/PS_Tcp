@@ -10,30 +10,36 @@ public class OsHandle implements IOsHandle{
     private ISocketClient soc= new Log_In();
     @Override
     public List<Os> findAll() {
-        return null;
+        return soc.findAll().getListOs();
     }
 
     @Override
     public void editPhone(ListTransfer editPhone) {
 
-
+     soc.listEdit(editPhone);
     }
 
     @Override
     public void addPhone(ListTransfer addList) {
-
+    soc.listAdd(addList);
 
     }
 
     @Override
     public void deletePhone(ListTransfer deteleList) {
 
-
+        soc.listDelete(deteleList);
     }
 
     @Override
     public boolean checkUp(String name) {
-        return false;
+        boolean check= true;
+        for(Os item: soc.findAll().getListOs()){
+            if(item.getName().equals(name)){
+                check= false;
+            }
+        }
+        return check;
     }
 
     @Override

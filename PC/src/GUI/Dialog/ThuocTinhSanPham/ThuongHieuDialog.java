@@ -171,8 +171,8 @@ public final class ThuongHieuDialog extends JDialog implements MouseListener {
             int index = getRowSelected();
             if (index != -1) {
                 brand.deletePhone(new ListTransfer(list.get(index),"delete"));
-
-                loadDataTable(list);
+                list= conn.findAll().getListBrand();
+                loadDataTable(conn.findAll().getListBrand());
                 ms.setText("");
             }
         } else if (e.getSource() == update) {
@@ -183,7 +183,8 @@ public final class ThuongHieuDialog extends JDialog implements MouseListener {
                 } else {
                     String tenthuonghieu = ms.getText();
                     if (brand.checkUp(tenthuonghieu)) {
-                        brand.editPhone(new ListTransfer(new Ram(list.get(index).getId(), tenthuonghieu,1),"edit"));
+                        brand.editPhone(new ListTransfer(new Brand(list.get(index).getId(), tenthuonghieu,1),"edit"));
+                        list= conn.findAll().getListBrand();
                         loadDataTable(list);
                         ms.setText("");
                     }else {

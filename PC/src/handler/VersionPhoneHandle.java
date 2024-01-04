@@ -18,6 +18,7 @@ public class VersionPhoneHandle implements IVersionPhoneHandle {
     public List<VersionPhone> findByMaSP(int msp) {
         List<VersionPhone> list = new ArrayList<VersionPhone>();
         for(VersionPhone ver : soc.findAll().getListVer()){
+
         if(ver.getPhone().getId()==msp){
             System.out.println(ver.getPhone().getId());
             list.add(ver);
@@ -29,8 +30,7 @@ public class VersionPhoneHandle implements IVersionPhoneHandle {
     @Override
     public VersionPhone findById(int id) {
         VersionPhone item= new VersionPhone();
-        System.out.println(findAll().size());
-       for(VersionPhone ver : findAll()){
+       for(VersionPhone ver : soc.findAll().getListVer()){
            if(ver.getId()==id){
             item= ver;
            }
@@ -51,17 +51,17 @@ public class VersionPhoneHandle implements IVersionPhoneHandle {
 
     @Override
     public void editVer(ListTransfer list) {
-
+soc.listEdit(list);
     }
 
     @Override
     public void deleteVer(ListTransfer id) {
-
+soc.listDelete(id);
     }
 
     @Override
     public void addVer(ListTransfer list) {
-
+soc.listAdd(list);
     }
 
 

@@ -20,13 +20,12 @@ public class BaseRepository{
         config.setUsername(USER);
         config.setPassword(PASS);
         config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "4096");
+        config.addDataSourceProperty("prepStmtCacheSize", "1000");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "10000");
         config.setConnectionTimeout(1500000000);
         config.setMaximumPoolSize(1000000000);
         ds = new HikariDataSource(config);
     }
-
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();
     }

@@ -67,7 +67,7 @@ public class TrangThai extends JPanel implements ActionListener {
         functionBar.setPreferredSize(new Dimension(0, 100));
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
-        String[] action = {"create", "update", "delete", "detail"};
+        String[] action = { "update", "delete"};
         mainFunction = new MainFunction(m.user.getManhomquyen().getId(), "sanpham", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);

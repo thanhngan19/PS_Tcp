@@ -10,27 +10,34 @@ public class OriginHandle implements IOriginHandle{
     private ISocketClient soc= new Log_In();
     @Override
     public List<Origin> findAll() {
-        return null;
+        return soc.findAll().getListOr();
     }
 
     @Override
     public void editPhone(ListTransfer editPhone) {
-
+    soc.listEdit(editPhone);
     }
 
     @Override
     public void  addPhone(ListTransfer addList) {
-
+soc.listAdd(addList);
     }
 
     @Override
     public void deletePhone(ListTransfer deteleList) {
-
+soc.listDelete(deteleList);
     }
 
     @Override
     public boolean checkUp(String name) {
-        return false;
+
+        boolean check= true;
+        for(Origin item: soc.findAll().getListOr()){
+            if(item.getName().equals(name)){
+                check= false;
+            }
+        }
+        return check;
     }
     @Override
     public String[] transListToArr() {

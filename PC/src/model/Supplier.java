@@ -17,6 +17,14 @@ public class Supplier {
         this.status = status;
     }
 
+    public Supplier(String name, String address, String email, String sdt, int status) {
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.sdt = sdt;
+        this.status = status;
+    }
+
     public Supplier() {
     }
 

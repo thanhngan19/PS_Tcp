@@ -27,4 +27,9 @@ public class UserService implements IUserService{
     public int getUser(String name) {
         return repo.getUser(name);
     }
+
+    @Override
+    public void setStatusAccount(int id) {
+        repo.setStatusAccount(id);
+    }
 }

@@ -1,17 +1,28 @@
 package model;
 
+import java.util.Date;
+
 public class Customer {
     private int id;
     private String name;
     private int gender;
-    private String date;
+    private Date date;
     private String sdt;
     private String email;
     private int status;
 
 
-    public Customer(int id, String name, int gender, String date, String sdt, String email, int status) {
+    public Customer(int id, String name, int gender, Date date, String sdt, String email, int status) {
         this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.date = date;
+        this.sdt = sdt;
+        this.email = email;
+        this.status = status;
+    }
+
+    public Customer(String name, int gender, Date date, String sdt, String email, int status) {
         this.name = name;
         this.gender = gender;
         this.date = date;
@@ -71,11 +82,11 @@ public class Customer {
     public Customer() {
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }

@@ -2,7 +2,8 @@ package model;
 
 import java.io.Serializable;
 
-public class ListTransfer {
+public class ListTransfer{
+
     private Phone phoneEdit;
     private PhoneDetail phoneDetailEdit;
     private ColorBr colorEdit;
@@ -14,10 +15,28 @@ public class ListTransfer {
     private VersionPhone ver;
     private String message;
     private int id;
-    public ListTransfer(Phone phoneEdit, PhoneDetail phoneDetailEdit, String message) {
-        this.phoneEdit = phoneEdit;
-        this.phoneDetailEdit = phoneDetailEdit;
+    private User user;
+    private Customer cus;
+    private Supplier sup;
+    private WareHouse ware;
+
+    public Customer getCus() {
+        return cus;
+    }
+
+    public void setCus(Customer cus) {
+        this.cus = cus;
+    }
+
+    public ListTransfer(String message, User user, Customer cus) {
         this.message = message;
+        this.user = user;
+        this.cus = cus;
+    }
+
+    public ListTransfer(String message, Customer cus) {
+        this.message = message;
+        this.cus = cus;
     }
 
     public Phone getPhoneEdit() {
@@ -30,6 +49,14 @@ public class ListTransfer {
 
     public PhoneDetail getPhoneDetailEdit() {
         return phoneDetailEdit;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setPhoneDetailEdit(PhoneDetail phoneDetailEdit) {
@@ -156,5 +183,42 @@ public class ListTransfer {
     public ListTransfer(String message, int id) {
         this.message = message;
         this.id = id;
+    }
+
+    public ListTransfer(String message, User user) {
+        this.message = message;
+        this.user = user;
+    }
+
+    public ListTransfer(Phone phoneEdit, VersionPhone ver, String message) {
+        this.phoneEdit = phoneEdit;
+        this.ver = ver;
+        this.message = message;
+    }
+
+    public ListTransfer(String message, Supplier sup) {
+        this.message = message;
+        this.sup = sup;
+    }
+
+    public Supplier getSup() {
+        return sup;
+    }
+
+    public void setSup(Supplier sup) {
+        this.sup = sup;
+    }
+
+    public ListTransfer(String message, WareHouse ware) {
+        this.message = message;
+        this.ware = ware;
+    }
+
+    public WareHouse getWare() {
+        return ware;
+    }
+
+    public void setWare(WareHouse ware) {
+        this.ware = ware;
     }
 }

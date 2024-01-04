@@ -8,6 +8,5 @@ public interface IVersionPhoneService {
     List<VersionPhone> findAll();
     void addNew(VersionPhone ver);
     void editVer(VersionPhone ver);
-    void addVer(VersionPhone ver);
     void delete(int ver);
 }

@@ -11,4 +11,5 @@ public interface IPhoneHandle {
     void deletePhone(ListTransfer deteleList);
     List<Phone> searchPhone(String search);
     Phone searchById(int id);
+    List<Phone> selectPhoneByWare(int id);
 }

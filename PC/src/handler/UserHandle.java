@@ -29,6 +29,16 @@ public class UserHandle implements IUserHandle{
          soc.listDelete(deteleList);
     }
 
+    @Override
+    public User findById(int id) {
+        User userFind=null;
+        for(User item : soc.findAll().getUser()){
+            if(item.getId() == id){
+                userFind= item;
+            }
+        }
+        return userFind;
+    }
 
 
 }

@@ -5,7 +5,7 @@ package model;
 import java.io.Serializable;
 import java.util.List;
 
-public class ListTranmission{
+public class ListTranmission {
     private List<Phone> listPhone;
     private List<ColorBr> listColor;
     private List<Ram> listRam;

@@ -12,22 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VersionPhoneRepository implements IVersionPhoneRepository{
+    private static final String INSERT="insert into phienbansanpham set masp=?,rom=?,ram=?,mausac=?,gianhap=?,giaxuat=?,soluongton=?";
+    private static final String SELECT="select * from phienbansanpham";
+    private static final String UPDATE="update  phienbansanpham set masp=?,rom=?,ram=?,mausac=?,gianhap=?,giaxuat=?,soluongton=? where maphienbansp=?";
+    private static final String DELETE="delete from phienbansanpham where masp=?";
     private IPhoneRepository phone = new PhoneRepository();
     private IRamRepository ram= new RamRepository();
     private IRomRepository rom= new RomRepository();
     private IColorRepository color= new ColorRepository();
-    private static final String INSERT="insert into phienbansanpham ('masp','rom','ram','mausac','gianhap','giaxuat','soluongton') values(?,?,?,?,?,?,?)";
-    private static final String SELECT="select * from phienbansanpham";
-    private static final String UPDATE="update phienbansanpham ('masp','rom','ram','mausac','gianhap','giaxuat','soluongton') values(?,?,?,?,?,?,?) where maphienbansp=?";
-    private static final String DELETE="delete from phienbansanpham where maphienbansp=?";
-
-
     @Override
     public void addNew(VersionPhone ver) {
         try {
             Connection conn=BaseRepository.getConnection();
-            boolean currentAutoCommit = conn.getAutoCommit();
-            System.out.println("Current AutoCommit Status: " + currentAutoCommit);
+            System.out.println("Bắt đầu giao dịch.");
             PreparedStatement ps = conn.prepareStatement(INSERT);
             ps.setInt(1, ver.getPhone().getId());
             ps.setInt(2, ver.getRam().getId());
@@ -35,16 +32,16 @@ public class VersionPhoneRepository implements IVersionPhoneRepository{
             ps.setInt(4, ver.getColor().getId());
             ps.setDouble(5, ver.getInPrice());
             ps.setDouble(6, ver.getExPrice());
-            ps.setInt(7, ver.getPhone().getQuantity());
+            ps.setInt(7,10);
             ps.executeUpdate();
-            if (!currentAutoCommit) {
-                conn.setAutoCommit(true);
-                System.out.println("Autocommit has been set to true.");
-            }
-            conn.close();
+            conn.commit();
+            System.out.println("Giao dịch đã hoàn thành.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("Transaction canceled due to SQLException.");
         }
+
+
+
     }
 
     @Override
@@ -67,6 +64,7 @@ public class VersionPhoneRepository implements IVersionPhoneRepository{
                 ramList.setStatus(rs.getInt("trangthai"));
                 list.add(ramList);
             }
+            conn.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -75,32 +73,6 @@ public class VersionPhoneRepository implements IVersionPhoneRepository{
 
     @Override
     public void editVer(VersionPhone ver) {
-        try {
-            Connection conn=BaseRepository.getConnection();
-            boolean currentAutoCommit = conn.getAutoCommit();
-            System.out.println("Current AutoCommit Status: " + currentAutoCommit);
-            PreparedStatement ps= conn.prepareStatement(UPDATE);
-            ps.setInt(1, ver.getPhone().getId());
-            ps.setInt(2, ver.getRam().getId());
-            ps.setInt(3, ver.getRom().getId());
-            ps.setInt(4, ver.getColor().getId());
-            ps.setDouble(5, ver.getInPrice());
-            ps.setDouble(6, ver.getExPrice());
-            ps.setInt(7, ver.getQuantity());
-            ps.setInt(8,ver.getId());
-            ps.executeUpdate();
-            if (!currentAutoCommit) {
-                conn.setAutoCommit(true);
-                System.out.println("Autocommit has been set to true.");
-            }
-            conn.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void addVer(VersionPhone ver) {
         Connection conn = null;
         try {
             conn = BaseRepository.getConnection();
@@ -116,20 +88,22 @@ public class VersionPhoneRepository implements IVersionPhoneRepository{
             ps.setDouble(5, ver.getInPrice());
             ps.setDouble(6, ver.getExPrice());
             ps.setInt(7, ver.getQuantity());
+            ps.setInt(8,ver.getId());
             ps.executeUpdate();
             conn.commit();
-            System.out.println("Giao dịch đã hoàn thành ver.");
+            System.out.println("Giao dịch đã hoàn thành.");
         } catch (SQLException e) {
             try {
                 conn.rollback();
+                e.printStackTrace();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
             System.out.println("Giao dịch đã bị hủy bỏ.");
+
         } finally {
             try {
                 conn.setAutoCommit(true);
-
                 conn.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -137,24 +111,40 @@ public class VersionPhoneRepository implements IVersionPhoneRepository{
             System.out.println("AutoCommit đã được đặt về true.");
 
         }
+
+
     }
 
     @Override
     public void delete(int ver) {
+        Connection conn = null;
         try {
-            Connection conn=BaseRepository.getConnection();
+            conn = BaseRepository.getConnection();
             boolean currentAutoCommit = conn.getAutoCommit();
-            System.out.println("Current AutoCommit Status: " + currentAutoCommit);
-            PreparedStatement ps= conn.prepareStatement(UPDATE);
+            System.out.println("Trạng thái AutoCommit hiện tại: " + currentAutoCommit);
+            conn.setAutoCommit(false);
+            System.out.println("Bắt đầu giao dịch.");
+            PreparedStatement ps = conn.prepareStatement(DELETE);
             ps.setInt(1, ver);
             ps.executeUpdate();
-            if (!currentAutoCommit) {
-                conn.setAutoCommit(true);
-                System.out.println("Autocommit has been set to true.");
-            }
-            conn.close();
+            System.out.println("Giao dịch đã hoàn thành.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            try {
+                conn.rollback();
+                e.printStackTrace();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.out.println("Giao dịch đã bị hủy bỏ.");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+                conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("AutoCommit đã được đặt về true.");
+
         }
     }
 

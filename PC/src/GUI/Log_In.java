@@ -37,20 +37,20 @@ public class Log_In extends JFrame implements KeyListener, Runnable,ISocketClien
     static List<T> searchList= new ArrayList<>();
     public Gson gson = new Gson();
     public static boolean isConn= false;
-    Socket soc;
+    public static boolean hasReceived= false;
+    static Socket soc;
+    static ListTranmission updatedList;
+    public static boolean check=false;
     static  ObjectOutputStream out;
     static ObjectInputStream in;
-    private  String json;
+    public  String json;
+    private final Object lock = new Object();
+    private final Object lockRead = new Object();
     JPanel pnlMain, pnlLogIn;
     JLabel lblImage,lbl3, lbl6, lbl7;
     InputForm txtUsername, txtPassword;
-    private static final Object lock = new Object();
     private Main m;
-
-
     Color FontColor = new Color(96, 125, 139);
-
-
     public Log_In() {
         initComponent();
         txtUsername.setText("ngan");
@@ -73,6 +73,39 @@ public class Log_In extends JFrame implements KeyListener, Runnable,ISocketClien
         }
     }
     @Override
+    public void listDelete(ListTransfer deList) {
+        if(isConn){
+            json = gson.toJson(deList);
+            try {
+
+                out.writeObject(json);
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                synchronized (lockRead) {
+                    System.out.println("hgeg");
+                    String updatedListJson = (String) in.readObject();
+                    updatedList = gson.fromJson(updatedListJson, ListTranmission.class);
+                    list = updatedList;
+                    isConn = true;
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @Override
     public List<Phone> listPhone() {
         return null;
     }
@@ -83,7 +116,7 @@ public class Log_In extends JFrame implements KeyListener, Runnable,ISocketClien
         for(User user : list.getUser()){
             if(user.getUserName().equals(userName)){
                 userFind=user;
-                System.out.println("dữ liệu đã nhận");
+
             }
         }
         return userFind;
@@ -100,18 +133,12 @@ public class Log_In extends JFrame implements KeyListener, Runnable,ISocketClien
                 try {
                     out.writeObject(json);
                     out.flush();
-                    String updatedListJson = (String) in.readObject();
-                    ListTranmission updatedList = gson.fromJson(updatedListJson, ListTranmission.class);
-                    list = updatedList;
-                    isConn = true;
+
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
         }
     }
-
     @Override
     public void listAdd(ListTransfer addList) {
         if(isConn){
@@ -119,36 +146,14 @@ public class Log_In extends JFrame implements KeyListener, Runnable,ISocketClien
             try {
                 out.writeObject(json);
                 out.flush();
-                String updatedListJson = (String) in.readObject();
-                ListTranmission updatedList = gson.fromJson(updatedListJson, ListTranmission.class);
-                list = updatedList;
-                isConn = true;
+
             } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    @Override
-    public void listDelete(ListTransfer deList) {
-        if(isConn){
-            json = gson.toJson(deList);
-            try {
-                out.writeObject(json);
-                out.flush();
-                String updatedListJson = (String) in.readObject();
-                ListTranmission updatedList = gson.fromJson(updatedListJson, ListTranmission.class);
-                list = updatedList;
-                isConn = true;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+
     @Override
     public List<Phone> listSearch(String url) {
         ListSearch list = new ListSearch(url);
@@ -174,6 +179,7 @@ public class Log_In extends JFrame implements KeyListener, Runnable,ISocketClien
         if (isConn) {
             return list;
 
+
         }
         else {
             try {
@@ -186,24 +192,13 @@ public class Log_In extends JFrame implements KeyListener, Runnable,ISocketClien
                 throw new RuntimeException(e);
             }
         }
-
-
     }
-    @Override
-    public void run() {
-        try {
-            Gson gson = new Gson();
-            list = gson.fromJson((String) in.readObject(), ListTranmission.class);
-            userCheck = list.getUser();
-            isConn = true;
-            System.out.println("hàm run");
-        } catch (IOException e) {
-
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
+    private ListTranmission readListFromInputStream(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+        String updatedListJson = (String) inputStream.readObject();
+        return gson.fromJson(updatedListJson, ListTranmission.class);
     }
+
+
     private void initComponent() {
         this.setSize(new Dimension(1000, 500));
         this.setLocationRelativeTo(null);

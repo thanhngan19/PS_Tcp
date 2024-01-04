@@ -3,6 +3,7 @@ package handler;
 import GUI.Log_In;
 import connect.ISocketClient;
 import model.Customer;
+import model.ListTransfer;
 
 import java.util.List;
 
@@ -36,6 +37,21 @@ public class CustomerHandle implements ICustomerHandle{
             arr[i]=list.get(i).getName();
         }
         return  arr;
+    }
+
+    @Override
+    public void editPhone(ListTransfer editPhone) {
+        soc.listEdit(editPhone);
+    }
+
+    @Override
+    public void addPhone(ListTransfer addList) {
+     soc.listAdd(addList);
+    }
+
+    @Override
+    public void deletePhone(ListTransfer deteleList) {
+soc.listDelete(deteleList);
     }
 
 }

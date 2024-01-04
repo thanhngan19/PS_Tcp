@@ -72,9 +72,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     private IPhoneHandle phone = new PhoneHandle();
     private IWareHouseHandle ware= new WareHouseHandle();
     private List<Phone> setPhone = phone.findAll();
-    private ISocketClient check= new Log_In();
-
-
+    private ISocketClient conn = new Log_In();
     List<VersionPhone> listChAll = ver.findAll();
     private List<VersionPhone> listch;
     Phone sp;
@@ -148,7 +146,6 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         thuonghieu = new SelectForm("Thương hiệu", arrthuonghieu);
         khuvuc = new SelectForm("Khu vực kho", arrkhuvuc);
         hinhanh = new InputImage("Hình minh họa");
-
         pninfosanpham.add(tenSP);
         pninfosanpham.add(xuatxu);
         pninfosanpham.add(chipxuly);
@@ -224,7 +221,6 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 int index = getRowCauHinh();
                 if (index != -1) {
-                    System.out.println(listChAll.size());
                     setInfoCauHinh(listChAll.get(index));
                 }
             }
@@ -337,7 +333,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             c.previous(pnmain);
         } else if (source == btnAddCauHinh) {
             if (validateCardTwo()) {
-                listch.add(getCauHinh());
+                ver.addVer(new ListTransfer(getCauHinh(),"add"));
+                this.listch= conn.findAll().getListVer();
                 loadDataToTableCauHinh(this.listch);
                 resetFormCauHinh();
             }
@@ -364,7 +361,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             Phone snNew = getInfo();
             snNew.setId(this.sp.getId());
             phone.editPhone(new ListTransfer(snNew,"edit"));
-            setPhone.get(this.sp.getId()-1).setName(snNew.getName());
+            setPhone = conn.findAll().getListPhone();
             jpSP.loadDataTalbe(setPhone);
             int input = JOptionPane.showConfirmDialog(this,
                 "Bạn có muốn chỉnh sửa chi tiết sản phẩm?", "Chỉnh sửa chi tiết", 
@@ -373,21 +370,21 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
                 CardLayout c = (CardLayout) pnmain.getLayout();
                 c.next(pnmain);
             }
-                    }
+        }
         if(source == btnEditCTCauHinhEdit){
             if (validateCardTwo()) {
             int index = getRowCauHinh();
             if(index < 0){
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn cấu hình");
             } else {
-                VersionPhone verP= ver.findById(index);
+                VersionPhone verP= listch.get(index);
                 verP.setRam(ram.findById(cbxRam.getSelectedIndex()));
                 verP.setRom(rom.findById(cbxRom.getSelectedIndex()));
                 verP.setColor(color.findById(cbxMausac.getSelectedIndex()));
                 verP.setInPrice(Double.parseDouble(txtgianhap.getText()));
                 verP.setExPrice(Double.parseDouble(txtgiaxuat.getText()));
            ver.editVer(new ListTransfer(verP,"edit"));
-            loadDataToTableCauHinh(ver.findAll());
+            loadDataToTableCauHinh(conn.findAll().getListVer());
             resetFormCauHinh();
             }
         }
@@ -395,13 +392,16 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         if(source == btnDeleteCauHinhEdit){
             int index = getRowCauHinh();
             ver.deleteVer(new ListTransfer("delete",index));
-            loadDataToTableCauHinh(ver.findAll());
+            loadDataToTableCauHinh(conn.findAll().getListVer());
             resetFormCauHinh();
         }
         if(source == btnAddCauHinhEdit){
             if(validateCardTwo() ){
-                ver.addVer(new ListTransfer(getCauHinh(sp.getId()),"add"));
-            loadDataToTableCauHinh(ver.findAll());
+                VersionPhone ver1 = getCauHinh();
+                ver1.setPhone(sp);
+                ver.addVer(new ListTransfer(ver1,"add"));
+                this.listch = ver.findByMaSP(sp.getId());
+            loadDataToTableCauHinh(listch);
             resetFormCauHinh();
             }
         }
@@ -416,18 +416,17 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     public void eventAddSanPham() {
         Phone sp = getInfo();
         int index = getRowCauHinh()+1;
-        System.out.println("số dươc chọn "+index);
-        VersionPhone v= ver.findById(index);
-        if(v != null){
+        VersionPhone v= listChAll.get(index);
+        if(v!=null) {
+            System.out.println(v.getRam().getName());
             sp.setQuantity(10);
             sp.setStatus(0);
-            phone.addPhone(new ListTransfer(sp,v,"add"));
+            phone.addPhone(new ListTransfer(sp, v, "add"));
+            setPhone = conn.findAll().getListPhone();
             JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công !");
-            setPhone.add(sp);
-            listChAll.add(v);
             jpSP.loadDataTalbe(setPhone);
-        }
             dispose();
+        }
     }
 
     public void eventEditCauHinh() {
@@ -437,16 +436,17 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn cấu hình");
             } else {
                 VersionPhone verP= ver.findById(index);
+                verP.setPhone(sp);
                 verP.setRam(ram.findById(cbxRam.getSelectedIndex()));
                 verP.setRom(rom.findById(cbxRom.getSelectedIndex()));
                 verP.setColor(color.findById(cbxMausac.getSelectedIndex()));
                 verP.setInPrice(Double.parseDouble(txtgianhap.getText()));
                 verP.setExPrice(Double.parseDouble(txtgiaxuat.getText()));
                 ver.editVer(new ListTransfer(verP,"edit"));
+                this.listch=conn.findAll().getListVer();
             loadDataToTableCauHinh(this.listch);
             resetFormCauHinh();
             }
-
         }
     }
 

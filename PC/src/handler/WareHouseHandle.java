@@ -2,6 +2,7 @@ package handler;
 
 import GUI.Log_In;
 import connect.ISocketClient;
+import model.ListTransfer;
 import model.WareHouse;
 
 import java.util.List;
@@ -33,5 +34,20 @@ public class WareHouseHandle implements IWareHouseHandle{
             }
         }
         return b;
+    }
+
+    @Override
+    public void editPhone(ListTransfer editPhone) {
+        soc.listEdit(editPhone);
+    }
+
+    @Override
+    public void addPhone(ListTransfer addList) {
+soc.listAdd(addList);
+    }
+
+    @Override
+    public void deletePhone(ListTransfer deteleList) {
+soc.listDelete(deteleList);
     }
 }

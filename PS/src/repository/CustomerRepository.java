@@ -79,37 +79,55 @@ public class CustomerRepository implements ICustomerRepository{
 
     @Override
     public void editCus(Customer customer) {
+        Connection conn = null;
         try {
-            Connection conn = BaseRepository.getConnection();
+            conn = BaseRepository.getConnection();
             boolean currentAutoCommit = conn.getAutoCommit();
-            System.out.println("Current AutoCommit Status: " + currentAutoCommit);
-            PreparedStatement ps= conn.prepareStatement(UPDATE);
+            System.out.println("Trạng thái AutoCommit hiện tại: " + currentAutoCommit);
+            conn.setAutoCommit(false);
+            System.out.println("Bắt đầu giao dịch.");
+            PreparedStatement ps = conn.prepareStatement(UPDATE);
             ps.setString(1, customer.getName());
             ps.setInt(2, customer.getGender());
             ps.setString(3, customer.getDate());
             ps.setString(4, customer.getSdt());
             ps.setString(5, customer.getEmail());
             ps.setInt(6, 1);
-            ps.setInt(7, customer.getId());
+            ps.setInt(7,customer.getId());
             ps.executeUpdate();
-            if (!currentAutoCommit) {
-                conn.setAutoCommit(true);
-                System.out.println("Autocommit has been set to true.");
-            }
-            conn.close();
+            conn.commit();
+            System.out.println("Giao dịch đã hoàn thành.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.out.println("Giao dịch đã bị hủy bỏ.");
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.setAutoCommit(true);;
+                conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("AutoCommit đã được đặt về true.");
+
         }
 
     }
 
     @Override
     public void addCus(Customer customer) {
+        Connection conn = null;
         try {
-            Connection conn = BaseRepository.getConnection();
+            conn = BaseRepository.getConnection();
             boolean currentAutoCommit = conn.getAutoCommit();
-            System.out.println("Current AutoCommit Status: " + currentAutoCommit);
-            PreparedStatement ps= conn.prepareStatement(INSERT_INTO);
+            System.out.println("Trạng thái AutoCommit hiện tại: " + currentAutoCommit);
+            conn.setAutoCommit(false);
+            System.out.println("Bắt đầu giao dịch.");
+            PreparedStatement ps = conn.prepareStatement(INSERT_INTO);
             ps.setString(1, customer.getName());
             ps.setInt(2, customer.getGender());
             ps.setString(3, customer.getDate());
@@ -117,34 +135,59 @@ public class CustomerRepository implements ICustomerRepository{
             ps.setString(5, customer.getEmail());
             ps.setInt(6, 1);
             ps.executeUpdate();
-            if (!currentAutoCommit) {
-                conn.setAutoCommit(true);
-                System.out.println("Autocommit has been set to true.");
-            }
-            conn.close();
+            conn.commit();
+            System.out.println("Giao dịch đã hoàn thành.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.out.println("Giao dịch đã bị hủy bỏ.");
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.setAutoCommit(true);;
+                conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("AutoCommit đã được đặt về true.");
+
         }
-
     }
-
     @Override
     public void deleteCustomer(int id) {
+        Connection conn = null;
         try {
-            Connection conn = BaseRepository.getConnection();
+            conn = BaseRepository.getConnection();
             boolean currentAutoCommit = conn.getAutoCommit();
-            System.out.println("Current AutoCommit Status: " + currentAutoCommit);
-            PreparedStatement ps= conn.prepareStatement(UPDATE);
+            System.out.println("Trạng thái AutoCommit hiện tại: " + currentAutoCommit);
+            conn.setAutoCommit(false);
+            System.out.println("Bắt đầu giao dịch.");
+            PreparedStatement ps = conn.prepareStatement(DELETE);
             ps.setInt(1, id);
             ps.executeUpdate();
-            if (!currentAutoCommit) {
-                conn.setAutoCommit(true);
-                System.out.println("Autocommit has been set to true.");
-            }
-            conn.close();
+            System.out.println("Giao dịch đã hoàn thành.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            try {
+                conn.rollback();
+                e.printStackTrace();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.out.println("Giao dịch đã bị hủy bỏ.");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+                conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("AutoCommit đã được đặt về true.");
+
         }
+
     }
 
     @Override

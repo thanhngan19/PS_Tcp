@@ -8,7 +8,9 @@ package GUI.Dialog.ThuocTinhSanPham;
 import GUI.Component.ButtonCustom;
 import GUI.Component.HeaderTitle;
 import GUI.Component.InputForm;
+import GUI.Log_In;
 import GUI.Panel.QuanLyThuocTinhSP;
+import connect.ISocketClient;
 import handler.GrAuthorHandle;
 import handler.IGrAuthorHandle;
 import handler.IOsHandle;
@@ -54,7 +56,7 @@ public class HeDieuHanhDialog extends JDialog implements MouseListener {
     List<Os> list = os.findAll();
     QuanLyThuocTinhSP qltt;
     private IGrAuthorHandle gr= new GrAuthorHandle();
-
+  ISocketClient conn= new Log_In();
     public HeDieuHanhDialog(JFrame owner, QuanLyThuocTinhSP qltt, String title, boolean modal, int nhomquyen) {
         super(owner, title, modal);
         initComponent(qltt);
@@ -149,6 +151,7 @@ public class HeDieuHanhDialog extends JDialog implements MouseListener {
                 String tenmau = ms.getText();
                 if (os.checkUp(tenmau)) {
                     os.addPhone(new ListTransfer(new Os(1, tenmau,1),"add"));
+                    list= conn.findAll().getListOs();
                     loadDataTable(list);
                     ms.setText("");
                 } else {
@@ -160,6 +163,7 @@ public class HeDieuHanhDialog extends JDialog implements MouseListener {
             int index = getRowSelected();
             if (index != -1) {
                 os.deletePhone(new ListTransfer(list.get(index),"delete"));
+                list= conn.findAll().getListOs();
                 loadDataTable(list);
                 ms.setText("");
             }
@@ -172,6 +176,7 @@ public class HeDieuHanhDialog extends JDialog implements MouseListener {
                     String tenmau = ms.getText();
                     if (os.checkUp(tenmau)) {
                         os.editPhone(new ListTransfer(new Os(1, tenmau,1),"edit"));
+                        list= conn.findAll().getListOs();
                         loadDataTable(list);
                         ms.setText("");
                     } else {
