@@ -107,7 +107,7 @@ public class NhanVienTrans implements ActionListener, DocumentListener {
         switch (btn) {
             case "THÊM" -> {
                 NhanVienDialog nvthem = new NhanVienDialog(this, nv.owner, true, "Thêm nhân viên", "create");
-                nvthem.setVisible(true);
+
             }
             case "SỬA" -> {
                 int index = nv.getRow();
@@ -115,14 +115,18 @@ public class NhanVienTrans implements ActionListener, DocumentListener {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần sửa");
                 } else {
                     NhanVienDialog nvsua = new NhanVienDialog(this, nv.owner, true, "Sửa nhân viên", "update", nv.getNhanVien());
-                    nvsua.setVisible(true);
+
                 }
             }
             case "XÓA" -> {
                 if (nv.getRow() < 0) {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xóa");
                 } else {
-                    deleteNv(nv.getNhanVien());
+                    int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa Sản phẩm :)!", "Xóa sản phẩm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    if(input==0) {
+                        System.out.println("Please");
+                        deleteNv(listNv.get(nv.getRow()));
+                    }
                 }
             }
             case "CHI TIẾT" -> {
@@ -166,8 +170,7 @@ public class NhanVienTrans implements ActionListener, DocumentListener {
     }
 
     public void deleteNv(Customer nv1) {
-        User userFind = user.findById(nv1.getId());
-        customer.deletePhone(new ListTransfer("delelete",userFind,nv1));
+        customer.deletePhone(new ListTransfer("delete",nv1));
         listNv= conn.findAll().getCustomerList();
         nv.loadDataTalbe(listNv);
     }

@@ -168,7 +168,7 @@ public class KhuVucKho extends JPanel implements ActionListener, ItemListener {
         tblModel.setRowCount(0);
         for (WareHouse kvk : result) {
             tblModel.addRow(new Object[]{
-                    n++, kvk.getName(), kvk.getStatus()
+                    n++, kvk.getName(), kvk.getNote()
             });
         }
     }
@@ -216,10 +216,14 @@ public class KhuVucKho extends JPanel implements ActionListener, ItemListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == mainFunction.btn.get("create")) {
             KhuVucKhoDialog kvkDialog = new KhuVucKhoDialog(this, owner, "Thêm khu vực kho", true, "create");
-        } else if (e.getSource() == mainFunction.btn.get("update")) {
+        } else if (e.getSource() == mainFunction.btn.get("update") && listKVK.get(getRowSelected()).getStatus()==1 ) {
             int index = getRowSelected();
             if (index != -1) {
-                KhuVucKhoDialog kvkDialog = new KhuVucKhoDialog(this, owner, "Chỉnh sửa khu vực kho", true, "update", listKVK.get(index));
+                if(listKVK.get(getRowSelected()).getStatus()==1){
+                    KhuVucKhoDialog kvkDialog = new KhuVucKhoDialog(this, owner, "Chỉnh sửa khu vực kho", true, "update", listKVK.get(index));
+                }else{
+                    JOptionPane.showMessageDialog(this, "Bạn không thể sửa ");
+                }
             }
         } else if (e.getSource() == mainFunction.btn.get("delete")) {
             int index = getRowSelected();
@@ -236,9 +240,21 @@ public class KhuVucKho extends JPanel implements ActionListener, ItemListener {
                         }
                     }
                     if (check == 0) {
-                        ware.deletePhone(new ListTransfer("delete",listKVK.get(index)));
-                        listKVK= conn.findAll().getListWare();
-                        loadDataTable(listKVK);
+                        boolean checkTu=false;
+                        for(Phone item :listSP){
+                            if(item.getWareHouse().getId() ==listKVK.get(index).getId()){
+                                checkTu=true;
+                            }
+                        }
+                        if(checkTu){
+                            JOptionPane.showMessageDialog(this, "Không thể xóa khu vực này !!");
+                        }
+                        else{
+                            ware.deletePhone(new ListTransfer("delete",listKVK.get(index)));
+                            listKVK= conn.findAll().getListWare();
+                            loadDataTable(listKVK);
+                        }
+
                     }
                     else {
                         JOptionPane.showMessageDialog(this, "Không thể xóa kho vì vẫn còn sản phẩm trong kho.");

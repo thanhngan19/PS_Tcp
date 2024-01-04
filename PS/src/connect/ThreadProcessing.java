@@ -121,6 +121,7 @@ public class ThreadProcessing extends Thread {
                             int n = 0;
                             System.out.println("delete phone");
                             phone.deletePhone(myObj.getPhoneEdit().getId());
+                            ver.delete(myObj.getPhoneEdit().getId());
                             list.setListPhone(phone.findAll());
                             for (ThreadProcessing clientThread : clientList) {
                                 n++;

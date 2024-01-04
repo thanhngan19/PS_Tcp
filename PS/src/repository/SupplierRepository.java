@@ -12,8 +12,8 @@ import java.util.List;
 
 public class SupplierRepository implements ISupplierRepository{
     private static final String SELECT="select * from nhacungcap";
-    private static final String INSERT_INTO="insert into nhacungcap set('tennhacungcap','diachi','email','sdt','trangthai') values(?,?,?,?,?)";
-    private static final String UPDATE="update nhacungcap set('tennhacungcap','diachi','email','sdt','trangthai') values(?,?,?,?,?) where nhacungcap.manhacungcap=?";
+    private static final String INSERT_INTO="insert into nhacungcap set tennhacungcap=?,diachi=?,email=?,sdt=?,trangthai=?";
+    private static final String UPDATE="update nhacungcap set tennhacungcap=?,diachi=?,email=?,sdt=?,trangthai=? where nhacungcap.manhacungcap=?";
     private static final String DELETE="delete  from nhacungcap where manhacungcap=?";
     @Override
     public List<Supplier> findAll() {
@@ -40,7 +40,6 @@ public class SupplierRepository implements ISupplierRepository{
         }
         return list;
     }
-
     @Override
     public void editCus(Supplier customer) {
         Connection conn = null;
@@ -55,7 +54,7 @@ public class SupplierRepository implements ISupplierRepository{
             ps.setString(2, customer.getAddress());
             ps.setString(3, customer.getEmail());
             ps.setString(4, customer.getSdt());
-            ps.setInt(5, 1);
+            ps.setInt(5, 0);
             ps.setInt(6,customer.getId());
             ps.executeUpdate();
             conn.commit();

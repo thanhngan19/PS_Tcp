@@ -175,8 +175,12 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
             NhaCungCapDialog dvtDialog = new NhaCungCapDialog(this, owner, "Thêm nhà cung cấp", true, "create");
         } else if (e.getSource() == mainFunction.btn.get("update")) {
             int index = getRowSelected();
-            if (index != -1) {
-                NhaCungCapDialog nccDialog = new NhaCungCapDialog(this, owner, "Chỉnh sửa nhà cung cấp", true, "update", listncc.get(index));
+            if (index != -1 ) {
+                if(listncc.get(index).getStatus()==1){
+                    NhaCungCapDialog nccDialog = new NhaCungCapDialog(this, owner, "Chỉnh sửa nhà cung cấp", true, "update", listncc.get(index));
+                }else{
+                    JOptionPane.showMessageDialog(this, "Không thể sưa nhà cung cấp");
+                }
             }
         } else if (e.getSource() == mainFunction.btn.get("delete")) {
             int index = getRowSelected();

@@ -18,7 +18,6 @@ public class VersionPhoneHandle implements IVersionPhoneHandle {
     public List<VersionPhone> findByMaSP(int msp) {
         List<VersionPhone> list = new ArrayList<VersionPhone>();
         for(VersionPhone ver : soc.findAll().getListVer()){
-
         if(ver.getPhone().getId()==msp){
             System.out.println(ver.getPhone().getId());
             list.add(ver);

@@ -14,7 +14,7 @@ public class UserRepository implements IUserRepository{
     private static final String UPDATE="update taikhoan set ('matkhau','manhomquyen','tendangnhap','trangthai') values(?,?,?,?) where taikhoan.manv=?";
     private static final String SELECT_STATUS="select * from taikhoan where trangthai =0";
     private static final String SELECT_USERNAME="select taikhoan.manv from taikhoan where taikhoan.tendangnhap=?";
-    private static final String SET_STATUS="update taikhoan set ('trangthai') values(?) where taikhoan.manv=? ";
+    private static final String SET_STATUS="update taikhoan set taikhoan.trangthai=? where taikhoan.manv=? ";
     private IGrAuthorRepository gr= new GrAuthorRepository();
 
     @Override
@@ -50,7 +50,7 @@ public class UserRepository implements IUserRepository{
             ps.setString(1, user.getPassWord());
             ps.setInt(2, user.getManhomquyen().getId());
             ps.setString(3, user.getUserName());
-            ps.setInt(4, user.getStatus());
+            ps.setInt(4, 0);
             ps.executeUpdate();
             if (!currentAutoCommit) {
                 conn.setAutoCommit(true);
@@ -104,21 +104,73 @@ public class UserRepository implements IUserRepository{
 
     @Override
     public void setStatusAccount(int id) {
+        Connection conn = null;
         try {
-            Connection conn = BaseRepository.getConnection();
+            conn = BaseRepository.getConnection();
             boolean currentAutoCommit = conn.getAutoCommit();
-            System.out.println("Current AutoCommit Status: " + currentAutoCommit);
+            System.out.println("Trạng thái AutoCommit hiện tại: " + currentAutoCommit);
+            conn.setAutoCommit(false);
+            System.out.println("Bắt đầu giao dịch.");
+            PreparedStatement ps = conn.prepareStatement(SET_STATUS);
+            ps.setInt(1, 0);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            conn.commit();
+            System.out.println("Giao dịch đã hoàn thành.");
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+                e.printStackTrace();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.out.println("Giao dịch đã bị hủy bỏ.");
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.setAutoCommit(true);;
+                conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("AutoCommit đã được đặt về true.");
+
+        }
+    }
+
+    @Override
+    public void setStatusAccount2(int id) {
+        Connection conn = null;
+        try {
+            conn = BaseRepository.getConnection();
+            boolean currentAutoCommit = conn.getAutoCommit();
+            System.out.println("Trạng thái AutoCommit hiện tại: " + currentAutoCommit);
+            conn.setAutoCommit(false);
+            System.out.println("Bắt đầu giao dịch.");
             PreparedStatement ps = conn.prepareStatement(SET_STATUS);
             ps.setInt(1, 1);
             ps.setInt(2, id);
             ps.executeUpdate();
-            if (!currentAutoCommit) {
-                conn.setAutoCommit(true);
-                System.out.println("Autocommit has been set to true.");
-            }
-            conn.close();
+            conn.commit();
+            System.out.println("Giao dịch đã hoàn thành.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            try {
+                conn.rollback();
+                e.printStackTrace();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.out.println("Giao dịch đã bị hủy bỏ.");
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.setAutoCommit(true);;
+                conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("AutoCommit đã được đặt về true.");
+
         }
     }
 }

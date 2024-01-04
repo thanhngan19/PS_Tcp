@@ -5,6 +5,7 @@ import GUI.Panel.TrangChu;
 import java.awt.*;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 import javax.swing.*;
 import GUI.Component.MenuTaskbar;
 import com.formdev.flatlaf.FlatDarculaLaf;
@@ -26,6 +27,7 @@ public class Main extends JFrame {
     private TrangChu trangChu;
     private  ObjectOutputStream out;
     private ObjectInputStream in;
+    private Socket soc;
 
 
     private void initComponent() {
@@ -55,8 +57,9 @@ public class Main extends JFrame {
         initComponent();
     }
 
-    public Main(User user) throws UnsupportedLookAndFeelException {
+    public Main(User user,Socket soc) throws UnsupportedLookAndFeelException {
         this.user = user;
+        this.soc= soc;
         initComponent();
         FlatRobotoFont.install();
         FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
@@ -88,6 +91,14 @@ public class Main extends JFrame {
         MainContent.add(pn).setVisible(true);
         MainContent.repaint();
         MainContent.validate();
+    }
+
+    public Socket getSoc() {
+        return soc;
+    }
+
+    public void setSoc(Socket soc) {
+        this.soc = soc;
     }
 
     public ObjectOutputStream getOut() {

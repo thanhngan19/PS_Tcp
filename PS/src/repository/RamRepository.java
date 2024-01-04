@@ -66,7 +66,7 @@ public class RamRepository implements IRamRepository{
             System.out.println("Bắt đầu giao dịch.");
             PreparedStatement ps = conn.prepareStatement(UPDATE);
             ps.setString(1, or.getName());
-            ps.setInt(2, 1);
+            ps.setInt(2, 0);
             ps.setInt(3,or.getId());
             ps.executeUpdate();
             conn.commit();

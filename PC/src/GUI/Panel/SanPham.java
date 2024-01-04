@@ -87,7 +87,6 @@ private IPhoneHandle phone = new PhoneHandle();
         search.txtSearchForm.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                System.out.println(search.txtSearchForm.getText());
                 loadDataTalbe(phone.searchPhone(search.txtSearchForm.getText()));
             }
 
@@ -129,7 +128,6 @@ private IPhoneHandle phone = new PhoneHandle();
             if (index != -1) {
                 if(phone.findAll().get(index).getStatus()!=0){
                     SanPhamDialog spDialog = new SanPhamDialog(this, owner, "Chỉnh sửa sản phẩm", true, "update", phone.findAll().get(index));
-                    spDialog.setVisible(true);
                 }
                 else{
                     JOptionPane.showMessageDialog(this, "Bạn không thể sửa sản phẩm này!!");

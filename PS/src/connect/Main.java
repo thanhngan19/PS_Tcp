@@ -12,6 +12,7 @@ import model.User;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.net.Socket;
 
 public class Main extends JFrame {
     public JPanel MainContent;
@@ -19,6 +20,8 @@ public class Main extends JFrame {
     public int notAccess;
     public int countClient;
     public int maxConnections;
+    private Socket socket;
+    private ServerSocketConnect conn;
     Color MainColor = new Color(250, 250, 250);
     private MenuTaskbar menuTaskbar;
     private TrangChu thongKe;
@@ -47,11 +50,13 @@ public class Main extends JFrame {
     public Main() {
         initComponent();
     }
-    public Main(User user,int maxConnections, int countClient, int notAccess) throws UnsupportedLookAndFeelException {
+    public Main(User user,int maxConnections, int countClient, int notAccess,Socket socket,ServerSocketConnect conn) throws UnsupportedLookAndFeelException {
         this.user = user;
         this.maxConnections= maxConnections;
         this.countClient= countClient;
         this.notAccess= notAccess;
+        this.socket=socket;
+        this.conn=conn;
         initComponent();
         FlatRobotoFont.install();
         FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
@@ -109,4 +114,21 @@ public class Main extends JFrame {
     public void setMaxConnections(int maxConnections) {
         this.maxConnections = maxConnections;
     }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
+    public ServerSocketConnect getConn() {
+        return conn;
+    }
+
+    public void setConn(ServerSocketConnect conn) {
+        this.conn = conn;
+    }
+
 }

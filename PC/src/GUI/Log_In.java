@@ -51,13 +51,14 @@ public class Log_In extends JFrame implements KeyListener, Runnable,ISocketClien
     InputForm txtUsername, txtPassword;
     private Main m;
     Color FontColor = new Color(96, 125, 139);
+    String serverIP = "10.10.29.108";
     public Log_In() {
         initComponent();
         txtUsername.setText("ngan");
         txtPassword.setPass("123456");
         try {
             if(!isConn){
-                this.soc = new Socket("localhost", 1234);
+                this.soc = new Socket(serverIP, 1234);
                 Thread t = new Thread((Runnable) this);
                 this.out = new ObjectOutputStream(soc.getOutputStream());
                 out.writeObject("hello from client");
@@ -133,7 +134,6 @@ public class Log_In extends JFrame implements KeyListener, Runnable,ISocketClien
                 try {
                     out.writeObject(json);
                     out.flush();
-
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -305,7 +305,7 @@ public class Log_In extends JFrame implements KeyListener, Runnable,ISocketClien
                     if (BCrypt.checkpw(passwordCheck, tk.getPassWord())) {
                         try {
                             this.dispose();
-                             m = new Main(tk);
+                             m = new Main(tk,soc);
                             m.setIn(in);
                             m.setOut(out);
                             m.setVisible(true);

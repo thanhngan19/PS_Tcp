@@ -34,9 +34,10 @@ public class PhoneHandle implements IPhoneHandle{
     @Override
     public List<Phone> searchPhone(String search) {
         List<Phone> list = new ArrayList<Phone>();
-        for(Phone item:soc.findAll().getListPhone()){
-            if(item.getName()== search){
-                list.add(item);
+        search = search.toLowerCase();
+        for (Phone i : soc.findAll().getListPhone()) {
+            if (Integer.toString(i.getId()).toLowerCase().contains(search) || i.getName().toLowerCase().contains(search)) {
+                list.add(i);
             }
         }
         return list;

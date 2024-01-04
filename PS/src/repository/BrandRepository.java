@@ -72,7 +72,7 @@ public class BrandRepository implements IBrandRepository {
             System.out.println("Bắt đầu giao dịch.");
             PreparedStatement ps = conn.prepareStatement(UPDATE);
             ps.setString(1, br.getName());
-            ps.setInt(2, 1);
+            ps.setInt(2, 0);
             ps.setInt(3,br.getId());
             ps.executeUpdate();
             conn.commit();

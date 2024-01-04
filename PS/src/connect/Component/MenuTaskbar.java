@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import com.google.gson.Gson;
 import connect.Main;
 import connect.Panel.Blocked;
 import connect.Panel.ThongKe;
@@ -22,6 +23,11 @@ import service.CustomerService;
 import service.IAuthorDetailService;
 import service.ICustomerService;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +49,9 @@ public class MenuTaskbar extends JPanel {
         int maxConnections;
     int countClient;
     int notAccess;
+     Socket socket;
+     ServerSocketConnect conn;
+
 
     public itemTaskbar[] listitem;
     JLabel lblTenNhomQuyen, lblUsername;
@@ -261,6 +270,15 @@ public class MenuTaskbar extends JPanel {
             TrangThai.list = listSta;
             status.loadDataTalbe(listSta);
             main.setPanel(status);
+        }
+    }
+    public static void Blocked(String userName){
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(main.getSocket().getOutputStream());
+            out.writeObject(userName);
+            out.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

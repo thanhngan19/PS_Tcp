@@ -7,12 +7,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CustomerRepository implements ICustomerRepository{
     private static final String SELECT="select * from nhanvien";
-    private static final String INSERT_INTO="insert into nhanvien set('hoten','gioitinh','ngaysinh','sdt','email','trangthai') values(?,?,?,?,?,?)";
+    private static final String INSERT_INTO="insert into nhanvien set hoten=?,gioitinh=?,ngaysinh=?,sdt=?,email=?,trangthai=?";
     private static final String UPDATE="update nhanvien set('hoten','gioitinh','ngaysinh','sdt','email','trangthai') values(?,?,?,?,?,?) where nhanvien.manv=?";
     private static final String DELETE="delete  from nhanvien where manv=?";
     private static final String SEARCH="select * from nhanvien where nhanvien.hoten=?";
@@ -92,7 +95,7 @@ public class CustomerRepository implements ICustomerRepository{
             ps.setString(3, customer.getDate());
             ps.setString(4, customer.getSdt());
             ps.setString(5, customer.getEmail());
-            ps.setInt(6, 1);
+            ps.setInt(6, 0);
             ps.setInt(7,customer.getId());
             ps.executeUpdate();
             conn.commit();
@@ -130,7 +133,12 @@ public class CustomerRepository implements ICustomerRepository{
             PreparedStatement ps = conn.prepareStatement(INSERT_INTO);
             ps.setString(1, customer.getName());
             ps.setInt(2, customer.getGender());
-            ps.setString(3, customer.getDate());
+            String dateString = customer.getDate();
+            SimpleDateFormat inputFormat = new SimpleDateFormat("MMM d, yyyy");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = inputFormat.parse(dateString);
+            String formattedDate = outputFormat.format(date);
+            ps.setString(3, formattedDate);
             ps.setString(4, customer.getSdt());
             ps.setString(5, customer.getEmail());
             ps.setInt(6, 1);
@@ -145,6 +153,8 @@ public class CustomerRepository implements ICustomerRepository{
             }
             System.out.println("Giao dịch đã bị hủy bỏ.");
             e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         } finally {
             try {
                 conn.setAutoCommit(true);;

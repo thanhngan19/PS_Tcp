@@ -67,7 +67,7 @@ public class ColorRepository implements IColorRepository {
             System.out.println("Current AutoCommit Status: " + currentAutoCommit);
             PreparedStatement ps= conn.prepareStatement(UPDATE);
             ps.setString(1, color.getName());
-            ps.setInt(2, color.getStatus());
+            ps.setInt(2, 0);
             ps.setInt(3, color.getId());
             ps.executeUpdate();
             if (!currentAutoCommit) {

@@ -10,4 +10,5 @@ public interface IUserService {
     List<User> selectUser();
     int getUser(String name);
     void setStatusAccount(int id);
+    void setStatusAccount2(int id);
 }

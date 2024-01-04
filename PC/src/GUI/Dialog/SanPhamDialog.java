@@ -359,6 +359,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             c.next(pnmain);
         } else if(source == btnSaveCH){
             Phone snNew = getInfo();
+            System.out.println(snNew.getBrand().getName());
             snNew.setId(this.sp.getId());
             phone.editPhone(new ListTransfer(snNew,"edit"));
             setPhone = conn.findAll().getListPhone();
@@ -392,6 +393,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         if(source == btnDeleteCauHinhEdit){
             int index = getRowCauHinh();
             ver.deleteVer(new ListTransfer("delete",index));
+            System.out.println("delete");
             loadDataToTableCauHinh(conn.findAll().getListVer());
             resetFormCauHinh();
         }

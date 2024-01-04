@@ -32,4 +32,9 @@ public class UserService implements IUserService{
     public void setStatusAccount(int id) {
         repo.setStatusAccount(id);
     }
+
+    @Override
+    public void setStatusAccount2(int id) {
+        repo.setStatusAccount2(id);
+    }
 }

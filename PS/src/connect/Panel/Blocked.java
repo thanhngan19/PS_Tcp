@@ -42,14 +42,14 @@ public final class Blocked extends JPanel implements ActionListener {
         tableSanPham = new JTable();
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT","Tên tài khoản", "Số  truy cập", "Trạng thái"};
+        String[] header = new String[]{"STT","Tên tài khoản",  "Trạng thái"};
         tblModel.setColumnIdentifiers(header);
         tableSanPham.setModel(tblModel);
         scrollTableSanPham.setViewportView(tableSanPham);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         TableColumnModel columnModel = tableSanPham.getColumnModel();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             if (i != 1) {
                 columnModel.getColumn(i).setCellRenderer(centerRenderer);
             }
@@ -98,11 +98,11 @@ public final class Blocked extends JPanel implements ActionListener {
         for(User item: list) {
             if(item.getStatus()==0) {
                 status="BLOCKED";
-                tblModel.addRow(new Object[]{n++, item.getUserName(), 0, status});
+                tblModel.addRow(new Object[]{n++, item.getUserName(),  status});
             }
             else{
                 status="AVAILABLE";
-                tblModel.addRow(new Object[]{n++, item.getUserName(), 0, status});
+                tblModel.addRow(new Object[]{n++, item.getUserName(),  status});
             }
         }
     }
@@ -113,8 +113,8 @@ public final class Blocked extends JPanel implements ActionListener {
             if (index != -1) {
                 int input = JOptionPane.showConfirmDialog(null, "Bạn có muốn bỏ khóa tài khoản này :)!", "UNBLOCKED", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
-                    user.setStatusAccount(list.get(index).getId());
-                    list.get(index).setStatus(1);
+                    user.setStatusAccount2(list.get(index).getId());
+                    list= user.list();
                     loadDataTalbe();
                 }
             }
@@ -124,7 +124,7 @@ public final class Blocked extends JPanel implements ActionListener {
                 int input = JOptionPane.showConfirmDialog(null, "Bạn có muốn  khóa tài khoản này :)!", "BLOCKED", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
                     user.setStatusAccount(list.get(index).getId());
-                    list.get(index).setStatus(1);
+                    list= user.list();
                     loadDataTalbe();
                 }
             }

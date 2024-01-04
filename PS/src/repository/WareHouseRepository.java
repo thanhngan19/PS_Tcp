@@ -12,8 +12,8 @@ import java.util.List;
 public class WareHouseRepository implements IWareHouseRepository{
     private static final String SELECT ="select * from khuvuckho where makhuvuc=?";
     private static final String SELECT_ALL="select * from khuvuckho";
-    private static final String INSERT_INTO="insert into khuvuckho set('tenkhuvuc','ghichu','trangthai') values(?,?,?)";
-    private static final String UPDATE="update khuvuckho set('tenkhuvuc','ghichu','trangthai') values(?,?,?) where nhanvien.manv=?";
+    private static final String INSERT_INTO="insert into khuvuckho set tenkhuvuc=?,ghichu=?,trangthai=?";
+    private static final String UPDATE="update khuvuckho set tenkhuvuc=?,ghichu=?,trangthai=? where khuvuckho.makhuvuc=?";
     private static final String DELETE="delete  from khuvuckho where makhuvuc=?";
     @Override
     public WareHouse findById(int id) {
@@ -73,7 +73,7 @@ public class WareHouseRepository implements IWareHouseRepository{
             PreparedStatement ps = conn.prepareStatement(UPDATE);
             ps.setString(1, customer.getName());
             ps.setString(2, customer.getNote());
-            ps.setInt(3, 1);
+            ps.setInt(3, 0);
             ps.setInt(4, customer.getId());
             ps.executeUpdate();
             conn.commit();

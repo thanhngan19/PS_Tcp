@@ -52,6 +52,7 @@ public class ServerSocketConnect extends JFrame implements KeyListener  {
     Color FontColor = new Color(96, 125, 139);
     Main m;
     Vector<ThreadProcessing> clientList = new Vector();
+    Socket socket;
     public ServerSocketConnect() {
         initComponent();
         txtUsername.setText("server");
@@ -67,7 +68,7 @@ public class ServerSocketConnect extends JFrame implements KeyListener  {
                 isConn=true;
             }
             while (true) {
-                Socket socket = serverSocket.accept();
+                 socket = serverSocket.accept();
                 countClient++;
                 if(countClient >MAX_CONNECTIONS){
                     notAccess=countClient - MAX_CONNECTIONS;
@@ -204,7 +205,7 @@ public class ServerSocketConnect extends JFrame implements KeyListener  {
                     if (BCrypt.checkpw(passwordCheck, userSave.getPassWord())) {
                         try {
                             this.dispose();
-                            m = new Main(userSave, MAX_CONNECTIONS,  countClient,  notAccess);
+                            m = new Main(userSave, MAX_CONNECTIONS,  countClient,  notAccess,socket,this);
                             m.setVisible(true);
                         } catch (UnsupportedLookAndFeelException ex) {
                             Logger.getLogger(ServerSocketConnect.class.getName()).log(Level.SEVERE, null, ex);
